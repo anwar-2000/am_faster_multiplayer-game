@@ -1,6 +1,0 @@
-FROM postgres:latest
-
-ENTRYPOINT [ "" ]
-
-
-EXPOSE 5432
