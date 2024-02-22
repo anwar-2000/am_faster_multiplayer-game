@@ -6,7 +6,8 @@ function Navbar() {
             <h1 className='text-lg'>AM_FASTER</h1>
             <ul className='flex items-center justify-center text-lg gap-5 text-white px-6'>
             <li><Link to="/">Home</Link></li>
-            <li><Link to="/multiplayer">Multiplayer</Link></li>
+            <li><Link to="/games">Games</Link></li>
+            <li><Link to="/multiplayer" className='text-gold'>Multiplayer</Link></li>
             <li><Link to="/account">Account</Link></li>
       </ul>
   </nav>
