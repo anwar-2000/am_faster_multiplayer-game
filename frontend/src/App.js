@@ -7,13 +7,16 @@ import Multiplayer from './pages/Multiplayer';
 import SoloGame from './pages/SoloGame';
 import AccountLayout from './layouts/AccountLayout';
 import ContextUIProvider from "./store/ContextUIProvider";
+import GameLayout from './layouts/GameLayout';
 
 function App() {
   const router = createBrowserRouter([
     {path : "/" , element : <RootLayout /> , children : [
       {index : true , element : <LandingPage />},
-      {path : "/games" , element : <Games />},
-      {path : "/solo_game" , element : <SoloGame />},
+      {path : "/games" , element : <GameLayout /> , children : [
+        {index : true , element : <Games />},
+        {path : "solo_game" , element : <SoloGame />}
+      ]},
       {path : "/multiplayer" , element : <Multiplayer />},
       {path : "/account" , element : <AccountLayout /> , children : [
         {index : true , element : <Account />},

@@ -3,13 +3,13 @@ const router = express.Router()
 const pool = require("../db")
 
 
-//get all played_games
+//get number of all played_games
 router.get("/",async (req,res) => {
     //const {user_id} = req.body
     try {
-        const all_played_games = await pool.query("SELECT * FROM played_games")
+        const all_played_games = await pool.query("SELECT COUNT(*) FROM played_games")
         res.status(200).send({
-            users : all_played_games.rows
+            users : all_played_games.rows[0].count
         })
     } catch (error) {
         console.log(error)
@@ -34,11 +34,11 @@ router.get("/games/:userId",async (req,res)=>{
     }
 })
 
-//create a game
+//save a game
 router.post("/", async (req,res)=>{
-    const {user_id,user_score,opponent,opponent_score,} = req.body
+    const {user_id,user_score,game_id} = req.body
     try {
-        await pool.query("INSERT INTO played_games (user_id,opponent_username,opponent_score,user_score) VALUES ($1,$2,$3,$4)",[user_id,opponent,opponent_score,user_score])
+        await pool.query("INSERT INTO played_games (user_id,user_score,game_id) VALUES ($1,$2,$3,$4)",[user_id,user_score,game_id])
         res.status(200).send({message : "Successfully created game"})
     } catch (error) {
         console.log(error)
@@ -46,8 +46,28 @@ router.post("/", async (req,res)=>{
     }
 })
 
+//save a online_game
+router.post("/online", async (req,res)=>{
+    const {user_id,user_score,opponent,opponent_score,} = req.body
+    try {
+        await pool.query("INSERT INTO online_played_games (user_id,opponent_username,opponent_score,user_score) VALUES ($1,$2,$3,$4)",[user_id,opponent,opponent_score,user_score])
+        res.status(200).send({message : "Successfully created game"})
+    } catch (error) {
+        console.log(error)
+        res.sendStatus(500)
+    }
+})
 
-
+// router.post("/new_challenge", async (req,res)=>{
+//     const {text,difficulty,category} = req.body
+//     try {
+//         await pool.query("INSERT INTO text_samples (text_content,difficulty,category) VALUES ($1,$2,$3)",[text,difficulty,category])
+//         res.status(200).send({message : "Successfully created new challenge"})
+//     } catch (error) {
+//         console.log(error)
+//         res.sendStatus(500)
+//     }
+// })
 
 
 module.exports = router

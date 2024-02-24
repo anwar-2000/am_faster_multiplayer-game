@@ -8,7 +8,7 @@ const auth = require("./routes/auth")
 const pool = require("./db")
 const port = 8000
 const mainTables = require("./sqlQueries/setupQueries")
-
+const text_samples = require("./consts/textSamples")
 
 
 app.use(express.json());
@@ -16,16 +16,28 @@ app.use(cors());
 // app.use(express.urlencoded({ extended: true }));
 
 
-app.get("/setup_db_", async (req,res)=>{
+app.get("/setup_db_", async (req, res) => {
+    const insertTextSamplesQueries = text_samples.map((sample, index) => {
+        return `
+            INSERT INTO text_samples (text_content, difficulty,category)
+            VALUES ('${sample.text_content}', ${sample.difficulty},${sample.category});
+        `;
+    });
     try {
-        await pool.query(mainTables)
-        res.status(200).send({message : "Successfully created TABLES for db"})
+        // Drop all existing tables
+        await pool.query("DROP SCHEMA public CASCADE; CREATE SCHEMA public;");
 
+        // Recreate tables with new definitions
+        await pool.query(mainTables);
+
+
+        res.status(200).send({ message: "Successfully recreated TABLES for db" });
     } catch (error) {
-        console.log(error)
-        res.sendStatus(500)
+        console.log(error);
+        res.sendStatus(500);
     }
 })
+
 app.get("/", (req,res) => {
     res.status(200).send({
         "message" : "Hello World"

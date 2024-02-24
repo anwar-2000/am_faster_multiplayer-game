@@ -1,5 +1,5 @@
 import {useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { contextUI } from '../store/contextUI';
 
 function Navbar() {
@@ -24,10 +24,10 @@ function Navbar() {
   return <nav className="bg-gray-900 font-bold text-white flex items-center justify-between pt-6 px-10">
             <h1 className='text-lg'>AM_FASTER</h1>
             <ul className='flex items-center justify-center text-lg gap-5 text-white px-6'>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/games">Games</Link></li>
-            <li><Link to="/multiplayer" className='text-gold'>Multiplayer</Link></li>
-            {loggedIn ?<li className='cursor-pointer' onClick={logoutHandler}>Logout</li> : <li><Link to="/account">Account</Link></li>}
+            <li><NavLink className={({isActive})=> isActive ? "text-gold" : "text-white"} to="/">Home</NavLink></li>
+            <li><NavLink className={({isActive})=> isActive ? "text-gold" : "text-white"} to="/games">Games</NavLink></li>
+            <li><NavLink className={({isActive})=> isActive ? "text-gold" : "text-white"}  to="/multiplayer">Multiplayer</NavLink></li>
+            {loggedIn ?<li className='cursor-pointer' onClick={logoutHandler}>Logout</li> : <li><NavLink className={({isActive})=> isActive ? "text-gold" : "text-white"} to="/account">Account</NavLink></li>}
       </ul>
   </nav>
 }
