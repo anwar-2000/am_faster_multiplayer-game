@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import Modal from "../components/Modal";
-
 function SoloGame({}) {
   const text = `In the digital age, our data is under constant siege. Hackers lurk in the shadows, weaving phishing scams, exploiting vulnerabilities, and deploying malware, all aiming to steal information and disrupt systems. Cybersecurity warriors stand guard, building firewalls, crafting encryption, and hunting threats, vigilant defenders in the never-ending battle for digital security.`;
   const userInput = useRef(null);
@@ -11,9 +10,10 @@ function SoloGame({}) {
     not_matched_letter_index: -1,
     all_mistakes: 0,
     message: "You completed this challenge with 0 mistakes !",
+    ended : false
   });
   const startGame = () => {
-    setGameStats((prev) => ({ ...prev, started: true }));
+    setGameStats((prev) => ({ ...prev, started: true , ended : false , all_mistakes : 0 , not_matched_letter_index : -1 , matched_letters_index : [] }));
   };
   const handleUserInput = (event) => {
     const input = event.target.value;
@@ -43,7 +43,11 @@ function SoloGame({}) {
     if (mismatchIndex === -1 && input.length === text.length) {
       setGameStats((prev) => ({
         ...prev,
+        matched_letters_index : [],
+        not_matched_letter_index : -1,
         message: `you Completed this challenge with ${prev.all_mistakes} mistakes`,
+        ended : true,
+        started : false
       }));
       modalRef.current.openModal();
     }
@@ -51,7 +55,7 @@ function SoloGame({}) {
 
   return (
     <>
-      {/* <Modal ref={modalRef} message={gameStats.message} /> */}
+      <Modal ref={modalRef} message={gameStats.message}  /> 
       <div className="w-full h-screen p-14 flex flex-col items-start justify-start">
         <h4 className="px-14 text-gold">Cyber Security</h4>
         <h1 className="text-3xl w-12/12 font-extrabold text-center font-sans text-white">

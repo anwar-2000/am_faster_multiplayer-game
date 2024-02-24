@@ -8,8 +8,6 @@ const bcrypt = require('bcrypt');
 // Login Route
 router.post("/login", async (req, res) => {
     const { username, password } = req.body;
-    //hashing password using bcrypt
-    const hashedPassword = await bcrypt.hash(password, 10);
     try {
         //checking if user exists
         const user = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
@@ -18,10 +16,10 @@ router.post("/login", async (req, res) => {
             return res.status(401).send({ message: "Invalid username or password" });
         }
     // Comparing hashed password from the database with provided password
-        const passwordMatch = await bcrypt.compare(hashedPassword, user.rows[0].password);
+        const passwordMatch = await bcrypt.compare(password, user.rows[0].password);
         if (!passwordMatch) {
             // Password doesn't match
-            return res.status(401).send({ message: "Invalid username or password" });
+            return res.status(401).send({ message: "Invalid  password" });
         }
         // Generating JWT token
         const token = jwt.sign({ userId: user.rows[0].id }, process.env.JWT_SECRET, { expiresIn: '7d' });

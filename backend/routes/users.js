@@ -64,7 +64,7 @@ router.post("/", async (req,res)=>{
             res.status(400).send({ message: "Username or email already exists" });
         }
         // else creating a new user
-        await pool.query("INSERT INTO users (username,email,password) VALUES ($1,$2,$3)",[username,hashedPassword,email])
+        await pool.query("INSERT INTO users (username,email,password) VALUES ($1,$2,$3)",[username,email,hashedPassword])
         res.status(200).send({message : "Successfully created user"})
     } catch (error) {
         console.error(error)

@@ -1,14 +1,33 @@
-import React from 'react'
+import {useContext } from 'react'
 import { Link } from 'react-router-dom'
+import { contextUI } from '../store/contextUI';
 
 function Navbar() {
+  const {loggedIn , handleLogout} = useContext(contextUI)
+  const token = localStorage.getItem("userToken")
+  const logoutHandler = async () => {
+      const response = await fetch("http://localhost:8000/auth/logout",{
+         method : "POST",
+         headers : {
+             "authorization": `Bearer ${token}`,
+             "Content-type" : "application/json"
+         }
+      })
+      if(!response.ok){
+          const errorData = await response.json()
+          console.log(errorData.message)
+          return;
+      }
+      localStorage.removeItem("userToken")
+      handleLogout()
+  }
   return <nav className="bg-gray-900 font-bold text-white flex items-center justify-between pt-6 px-10">
             <h1 className='text-lg'>AM_FASTER</h1>
             <ul className='flex items-center justify-center text-lg gap-5 text-white px-6'>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/games">Games</Link></li>
             <li><Link to="/multiplayer" className='text-gold'>Multiplayer</Link></li>
-            <li><Link to="/account">Account</Link></li>
+            {loggedIn ?<li className='cursor-pointer' onClick={logoutHandler}>Logout</li> : <li><Link to="/account">Account</Link></li>}
       </ul>
   </nav>
 }

@@ -1,15 +1,18 @@
 const express = require("express")
 const app = express()
 require('dotenv').config();
-
+const cors = require("cors")
 const users = require("./routes/users")
+const games = require("./routes/games")
+const auth = require("./routes/auth")
 const pool = require("./db")
-const port = 3000
+const port = 8000
 const mainTables = require("./sqlQueries/setupQueries")
 
 
 
 app.use(express.json());
+app.use(cors());
 // app.use(express.urlencoded({ extended: true }));
 
 
@@ -31,7 +34,7 @@ app.get("/", (req,res) => {
 
 app.use("/users",users)
 app.use("/game",games)
-app.use("auth",auth)
+app.use("/auth",auth)
 
 
 app.listen(port,()=> console.log(` Server listening on port ${port}`))
