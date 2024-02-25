@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import Modal from "../components/Modal";
+import { formatTime } from "../utils/elapsedTime";
 import ReadyyGo from "./ReadyyGo";
-function Game({}) {
-  const text = `In the digital age, our data is under constant siege. Hackers lurk in the shadows, weaving phishing scams, exploiting vulnerabilities, and deploying malware, all aiming to steal information and disrupt systems.`;
+function Game({id,text,category,difficulty}) {
   const userInput = useRef(null);
   const modalRef = useRef(null);
   const timerRef = useRef(null);
@@ -36,12 +36,7 @@ function Game({}) {
     setGameStats((prev)=>({...prev,started : false , elapsedTime : 0 , startTime : null , matched_letters_index : [] , not_matched_letter_index : -1}))
     clearInterval(timerRef.current); // stopping the timer
   }
-  //Formating elapsed time to display in minutes and seconds
-  const formatTime = (time) => {
-    const minutes = Math.floor(time / 60000);
-    const seconds = ((time % 60000) / 1000).toFixed(0);
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-  }; 
+  
   const handleUserInput = (event) => {
     const input = event.target.value;
     const minLength = Math.min(input.length, text.length);
@@ -81,10 +76,10 @@ function Game({}) {
 
   return (
     <>
-      <Modal ref={modalRef} message={gameStats.message} time={formatTime(gameStats.elapsedTime)}  /> 
+      <Modal ref={modalRef} mistakes={gameStats.all_mistakes} message={gameStats.message} time={gameStats.elapsedTime} challenge_id={id} /> 
       <div className="w-full h-screen p-14 flex flex-col items-start justify-start">
         <div className="flex items-center justify-center gap-8">
-          <h4 className="px-14 text-gold">Cyber Security</h4>
+          <h4 className="px-14 text-gold">{category} - {difficulty}</h4>
           <p className="text-blue-500 text-lg font-bolder"> time : {formatTime(gameStats.elapsedTime)}</p>
           <p className={`${(gameStats.all_mistakes <= 3 && gameStats.all_mistakes > 0) ? "text-orange-500 " : gameStats.all_mistakes > 3 ? "text-red-500 " : "text-green-500"} text-lg font-bolder`}>mistakes : {gameStats.all_mistakes}</p>
         </div>

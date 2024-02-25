@@ -28,16 +28,22 @@ const mainTables = `
     CREATE TABLE played_games (
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id),
-        user_score INTEGER,
+        mistakes INTEGER,
+        time INTEGER,
+        challenge_id INTEGER,
         game_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE online_played_games (
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id),
+        opponent_id INTEGER REFERENCES users(id),
         opponent_username VARCHAR(30),
-        opponent_score INTEGER,
-        user_score INTEGER,
+        opponent_mistakes INTEGER,
+        opponent_time INTEGER,
+        user_mistakes INTEGER,
+        user_time INTEGER,
+        challenge_id INTEGER,
         game_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 

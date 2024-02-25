@@ -9,3 +9,7 @@ function Profile() {
 }
 
 export default Profile
+
+export const profileLoader =  async () =>{
+    // fetch user profile data
+}

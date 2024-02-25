@@ -1,5 +1,6 @@
 import {useRef} from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 function Register() {
     const navigate = useNavigate()
     const username_ref = useRef(null)
@@ -23,13 +24,13 @@ function Register() {
             })
             if(!response.ok){
                 const errorData = await response.json()
-                console.log("Error register : ",errorData.message)
+                toast.error(errorData.message)
                 return;
             }
             const data = await response.json()
             localStorage.setItem("userToken",data.token)
             navigate("profile")
-
+            toast.success("Welcome !")
         } catch (error) {
             console.log(error)
             return;

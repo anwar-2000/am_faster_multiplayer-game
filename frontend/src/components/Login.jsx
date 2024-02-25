@@ -1,5 +1,6 @@
 import {useContext, useRef} from 'react'
 import {useNavigate} from "react-router-dom"
+import { toast } from 'sonner'
 import { contextUI } from '../store/contextUI'
 
 function Login() {
@@ -24,13 +25,14 @@ function Login() {
             })
             if(!response.ok){
                 const errorData = await response.json()
-                console.log("Error : ",errorData.message)
+                toast.error(errorData.message)
                 return;
             }
             const data = await response.json();
             const { token } = data;
             localStorage.setItem("userToken",token)
             handleLogin() // update navbar UI
+            toast.success("Welcome !")
             navigate("profile")
         } catch (error) {
             console.log(error)
