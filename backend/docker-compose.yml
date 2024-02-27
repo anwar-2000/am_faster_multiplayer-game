@@ -6,12 +6,14 @@ services:
        POSTGRES_PASSWORD: drwx_anwar
        POSTGRES_USER: drwx_anwar
        POSTGRES_DB: am_faster_db
+    restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data
   backend:
     image: am_faster_backend
     ports:
       - 8000:8000
+    restart: always 
     
 volumes:
   postgres_data:

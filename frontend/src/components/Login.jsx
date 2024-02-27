@@ -2,13 +2,15 @@ import {useContext, useRef} from 'react'
 import {useNavigate} from "react-router-dom"
 import { toast } from 'sonner'
 import { contextUI } from '../store/contextUI'
+import { useSocket } from '../store/SocketContextProvider'
 
 function Login() {
     const navigate = useNavigate()
     const username_ref = useRef(null)
     const password_ref = useRef(null)
     const {handleLogin} = useContext(contextUI)
-    
+    const socket = useSocket()
+
     const handleSubmit = async (event) =>{
         event.preventDefault()
         // TODO :  control values passed
@@ -31,8 +33,12 @@ function Login() {
             const data = await response.json();
             const { token } = data;
             localStorage.setItem("userToken",token)
+            socket.emit("login", username_ref.current.value);
             handleLogin() // update navbar UI
             toast.success("Welcome !")
+            //emitting socket login to attach its id to username
+            console.log("Emmiting username !!!")
+            socket.emit("test")
             navigate("profile")
         } catch (error) {
             console.log(error)

@@ -1,9 +1,12 @@
 import {useContext } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { contextUI } from '../store/contextUI';
+import { useSocket } from '../store/SocketContextProvider';
 
 function Navbar() {
   const {loggedIn , handleLogout} = useContext(contextUI)
+  const navigate = useNavigate()
+  const socket= useSocket()
   const token = localStorage.getItem("userToken")
   const logoutHandler = async () => {
       const response = await fetch("http://localhost:8000/auth/logout",{
@@ -20,6 +23,8 @@ function Navbar() {
       }
       localStorage.removeItem("userToken")
       handleLogout()
+    //   socket.emit("disconnect")
+      navigate("/")
   }
   return <nav className="bg-gray-900 font-bold text-white flex items-center justify-between pt-6 px-10">
             <h1 className='text-lg'>AM_FASTER</h1>
@@ -27,7 +32,7 @@ function Navbar() {
             <li><NavLink className={({isActive})=> isActive ? "text-gold" : "text-white"} to="/">Home</NavLink></li>
             <li><NavLink className={({isActive})=> isActive ? "text-gold" : "text-white"} to="/challenges">Games</NavLink></li>
             <li><NavLink className={({isActive})=> isActive ? "text-gold" : "text-white"}  to="/multiplayer">Multiplayer</NavLink></li>
-            {loggedIn ?<li className='cursor-pointer' onClick={logoutHandler}>Logout</li> : <li><NavLink className={({isActive})=> isActive ? "text-gold" : "text-white"} to="/account">Account</NavLink></li>}
+            {(loggedIn || token ) ?<li className='cursor-pointer' onClick={logoutHandler}>Logout</li> : <li><NavLink className={({isActive})=> isActive ? "text-gold" : "text-white"} to="/account">Account</NavLink></li>}
       </ul>
   </nav>
 }

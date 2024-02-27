@@ -1,5 +1,5 @@
 ###
-GET http://localhost:8000/game/games/1
+GET http://localhost:8000/setup_db_
 
 ###
 POST http://localhost:8000/game
@@ -15,6 +15,6 @@ Content-Type: application/json
 
 {
     "text":"The Amazon rainforest, also known as the Amazon Jungle, is the largest tropical rainforest in the world. It is home to a vast array of plant and animal species." ,
-    "difficulty" : "Medium",
+    "difficulty" : "Hard",
     "category": "Nature"
 }

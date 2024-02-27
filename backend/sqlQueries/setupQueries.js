@@ -53,5 +53,18 @@ const mainTables = `
         difficulty VARCHAR(10),
         category VARCHAR(10)
     );
+
+    CREATE TABLE game_invitations (
+        id SERIAL PRIMARY KEY,
+        sender_id INTEGER REFERENCES users(id),
+        sender_username VARCHAR(50),
+        recipient_id INTEGER REFERENCES users(id),
+        recipient_username VARCHAR(50),
+        challenge_id INTEGER REFERENCES text_samples(id), 
+        status VARCHAR(20),  
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+        CONSTRAINT valid_status CHECK (status IN ('pending', 'accepted', 'rejected'))
+    );
 `;
 module.exports = mainTables

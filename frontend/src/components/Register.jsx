@@ -27,10 +27,8 @@ function Register() {
                 toast.error(errorData.message)
                 return;
             }
-            const data = await response.json()
-            localStorage.setItem("userToken",data.token)
-            navigate("profile")
-            toast.success("Welcome !")
+            navigate("/account")
+            toast.success("Great ! log in now ...")
         } catch (error) {
             console.log(error)
             return;

@@ -3,13 +3,38 @@ import RootLayout from './layouts/RootLayout';
 import Account from './pages/Account';
 import Games, { gamesLoader } from './pages/Games';
 import LandingPage from './pages/LandingPage';
-import Multiplayer from './pages/Multiplayer';
+import Multiplayer, { multiplayerLoader } from './pages/Multiplayer';
 import SoloGame, { speceficGameLoader } from './pages/SoloGame';
 import AccountLayout from './layouts/AccountLayout';
 import ContextUIProvider from "./store/ContextUIProvider";
 import GameLayout from './layouts/GameLayout';
+import Profile, { profileLoader } from './pages/Profile';
+import  { useSocket } from "./store/SocketContextProvider";
+import { useEffect } from 'react';
+import { toast } from 'sonner';
 
 function App() {
+  const socket = useSocket()
+  useEffect(()=>{
+
+    socket.on('connect', () => {
+      console.log('Connected to server');
+      // Set up event listeners here
+    });
+
+    socket.on('receiveInvitation', (invitation) => {
+      console.log('Received invitation:', invitation);
+      toast.message("someone is inviting You ! ")
+    });
+    socket.on('connect_error', (error) => {
+      console.error('Socket connection error:', error);
+  });
+    // return () => {
+    //   socket.disconnect();
+    //   console.log('Disconnected from server in APPjs');
+    // };
+ },[])
+
   const router = createBrowserRouter([
     {path : "/" , element : <RootLayout /> , children : [
       {index : true , element : <LandingPage />},
@@ -18,15 +43,15 @@ function App() {
         {path : "solo_game" , element : <SoloGame />},
         {path : ":challengeId" , element : <SoloGame /> , loader : speceficGameLoader}
       ]},
-      {path : "/multiplayer" , element : <Multiplayer />},
+      {path : "/multiplayer" , element : <Multiplayer /> , loader : multiplayerLoader},
       {path : "/account" , element : <AccountLayout /> , children : [
         {index : true , element : <Account />},
-        {path : "profile" , element : <h1>Profile</h1>}
+        {path : "profile" , element : <Profile /> , loader : profileLoader}
       ]}
     ] }
   ])
   return <ContextUIProvider>
-      <RouterProvider router={router} />
+          <RouterProvider router={router} />
     </ContextUIProvider>
 }
 export default App;

@@ -11,7 +11,7 @@ const Modal = forwardRef(({ message ,mistakes, challenge_id, time}, ref) => {
   };
   const handleSaveScore = async () => {
       try {
-        const response = await fetch("http://localhost:8000/game",{
+        const response = await fetch("http://localhost:8000/games",{
           method : "POST",
           headers : {
             "authorization" : `Bearer ${token}`,
@@ -21,7 +21,6 @@ const Modal = forwardRef(({ message ,mistakes, challenge_id, time}, ref) => {
           body : JSON.stringify({
             challenge_id : challenge_id,
             mistakes : mistakes,
-            user_token : token,
             time : time
           })
         })

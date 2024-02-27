@@ -1,9 +1,14 @@
 import {useState} from 'react'
+import { Navigate } from 'react-router-dom'
 import Login from '../components/Login'
 import Register from '../components/Register'
 
 function Account() {
-  const [form, setForm] = useState("register")
+  const [form, setForm] = useState("login")
+  const token = localStorage.getItem("userToken")
+  if(token) {
+    return <Navigate to="profile" />
+  }
   return (
     <div className='w-full h-screen grid place-items-center'>
       <div className="w-2/5 drop-shadow-glowWhite flex flex-col items-start justify-start gap-3 bg-white p-8 rounded-xl">
