@@ -2,7 +2,7 @@ import React from 'react'
 import { formatTime } from '../utils/elapsedTime'
 
 function OnlinePlayedGame({category,difficulty,mistakes,time,date}) {
-  console.log(mistakes)
+  //console.log(mistakes)
   return <>
      <small className='text-blue-500'>{new Date(date).toDateString()}</small>
     <div className='w-full mb-4 bg-slate-900 text-slate-500 rounded-lg p-2 flex items-center justify-evenly'>

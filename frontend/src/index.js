@@ -4,15 +4,16 @@ import './index.css';
 import App from './App';
 import { Toaster } from 'sonner';
 import { SocketContextProvider } from './store/SocketContextProvider';
-
+import {QueryClient , QueryClientProvider} from "@tanstack/react-query"
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+const queryClient = new QueryClient()
 root.render(
-  <React.StrictMode>
+  <QueryClientProvider client={queryClient}>
     <SocketContextProvider>
     <App />
     </SocketContextProvider>
-    <Toaster position="top-center" />
-  </React.StrictMode>
+    <Toaster position="top-center" closeButton duration={2000} richColors />
+  </QueryClientProvider>
 );
 

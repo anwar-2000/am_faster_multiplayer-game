@@ -23,7 +23,7 @@ function Navbar() {
       }
       localStorage.removeItem("userToken")
       handleLogout()
-    //   socket.emit("disconnect")
+      socket.disconnect();
       navigate("/")
   }
   return <nav className="bg-gray-900 font-bold text-white flex items-center justify-between pt-6 px-10">

@@ -12,19 +12,16 @@ import Profile, { profileLoader } from './pages/Profile';
 import  { useSocket } from "./store/SocketContextProvider";
 import { useEffect } from 'react';
 import { toast } from 'sonner';
+import MultiplayerLayout from './layouts/MultiplayerLayout';
+import OnlineGame, { onlineGameLoader } from './components/OnlineGame';
+
 
 function App() {
   const socket = useSocket()
   useEffect(()=>{
-
     socket.on('connect', () => {
       console.log('Connected to server');
       // Set up event listeners here
-    });
-
-    socket.on('receiveInvitation', (invitation) => {
-      console.log('Received invitation:', invitation);
-      toast.message("someone is inviting You ! ")
     });
     socket.on('connect_error', (error) => {
       console.error('Socket connection error:', error);
@@ -33,7 +30,7 @@ function App() {
     //   socket.disconnect();
     //   console.log('Disconnected from server in APPjs');
     // };
- },[])
+ },[socket])
 
   const router = createBrowserRouter([
     {path : "/" , element : <RootLayout /> , children : [
@@ -43,7 +40,10 @@ function App() {
         {path : "solo_game" , element : <SoloGame />},
         {path : ":challengeId" , element : <SoloGame /> , loader : speceficGameLoader}
       ]},
-      {path : "/multiplayer" , element : <Multiplayer /> , loader : multiplayerLoader},
+      {path : "/multiplayer" , element : <MultiplayerLayout /> , children : [
+        {index:true,element : <Multiplayer /> , loader : multiplayerLoader},
+        {path : "room/:roomId/:challengeId" , element : <OnlineGame /> , loader : onlineGameLoader}
+      ]},
       {path : "/account" , element : <AccountLayout /> , children : [
         {index : true , element : <Account />},
         {path : "profile" , element : <Profile /> , loader : profileLoader}

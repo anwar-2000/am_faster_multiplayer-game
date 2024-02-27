@@ -3,9 +3,9 @@ import UserPlayedGames from "../components/UserPlayedGames"
 import UserPlayedGame from "../components/UserPlayedGame"
 import OnlinePlayedGames from "../components/OnlinePlayedGames"
 import OnlinePlayedGame from "../components/OnlinePlayedGame"
+
 function Profile() {
   const {played_games} = useLoaderData()
-  //console.log(played_games)
   return (
     <div className="w-full h-screen px-8 pt-14 flex flex-wrap items-center justify-start gap-4 ">
         <div className="w-full">

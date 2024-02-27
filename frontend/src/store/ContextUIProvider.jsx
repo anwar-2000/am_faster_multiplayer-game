@@ -3,21 +3,31 @@ import { contextUI } from './contextUI'
 
 
 function ContextUIProvider({children}) {
-    const [UI_states, setUIStates] = useState({
-        loggedIn : false
+    const [states, setStates] = useState({
+        loggedIn : false,
+        username : "",
+        sender : "",
+        recipient : ""
     })
 
-    const handleLogin = () => {
-        setUIStates(prevStates => ({ ...prevStates, loggedIn: true }));
+    const handleLogin = (username) => {
+        setStates(prevStates => ({ ...prevStates, loggedIn: true , username }));
       };
     
       const handleLogout = () => {
-        setUIStates(prevStates => ({ ...prevStates, loggedIn: false }));
+        setStates(prevStates => ({ ...prevStates, loggedIn: false , username :""}));
       };
+      const handleCreateRoom = (sender,recipient)=>{
+        setStates((prev)=>({...prev,sender : sender , recipient}))
+      }
     const contextValue = {
-        loggedIn : UI_states.loggedIn,
+        loggedIn : states.loggedIn,
         handleLogin,
-        handleLogout
+        handleLogout,
+        username : states.username,
+        handleCreateRoom,
+        sender : states.sender,
+        recipient : states.recipient
     }
   return (
     <contextUI.Provider value={contextValue}>

@@ -13,6 +13,8 @@ function Login() {
 
     const handleSubmit = async (event) =>{
         event.preventDefault()
+        const username = username_ref.current.value
+        const password = password_ref.current.value
         // TODO :  control values passed
         try {
             const response = await fetch("http://localhost:8000/auth/login",{
@@ -21,8 +23,8 @@ function Login() {
                     'Content-Type': 'application/json'
                 },
                 body : JSON.stringify({
-                    username : username_ref.current.value,
-                    password : password_ref.current.value
+                    username ,
+                    password 
                 })
             })
             if(!response.ok){
@@ -33,12 +35,12 @@ function Login() {
             const data = await response.json();
             const { token } = data;
             localStorage.setItem("userToken",token)
-            socket.emit("login", username_ref.current.value);
-            handleLogin() // update navbar UI
+            socket.emit("login", username);
+            handleLogin(username) // update navbar UI
             toast.success("Welcome !")
             //emitting socket login to attach its id to username
-            console.log("Emmiting username !!!")
-            socket.emit("test")
+            //console.log("Emmiting username !!!")
+            //socket.emit("test")
             navigate("profile")
         } catch (error) {
             console.log(error)

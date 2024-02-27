@@ -41,13 +41,13 @@ router.get("/",async (req,res) => {
 })
 
 //get user infos
-router.get("/user/:userId", async (req,res)=>{
-    const userId = req.params.userId;
+router.get("/user/:username", async (req,res)=>{
+    const username = req.params.username;
     if(!userId){
-        return res.status(400).send({message : "No userID received"})
+        return res.status(400).send({message : "No username received"})
     }
     try {
-        const user = await pool.query("SELECT * FROM users WHERE id=$1",[userId])
+        const user = await pool.query("SELECT * FROM users WHERE username=$1",[username])
         if(user.rows.length < 1){   
            return res.status(404).send({message : "No user found"})
         }
