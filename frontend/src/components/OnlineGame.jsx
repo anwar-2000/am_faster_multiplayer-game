@@ -5,11 +5,14 @@ import { useLoaderData } from 'react-router-dom'
 import { toast } from 'sonner';
 import { contextUI } from '../store/contextUI';
 import { useSocket } from '../store/SocketContextProvider';
-import Game from './Game'
+import RoomGame from './RoomGame';
 
 function OnlineGame() {
     const socket = useSocket()
-    const [ready, setReady] = useState(false);
+    const [game, setGame] = useState({
+        hidden : true ,
+        start : false,
+    });
     const {challenge,roomId} = useLoaderData();
     const {username} = useContext(contextUI);
 
@@ -19,17 +22,20 @@ function OnlineGame() {
    }
    useEffect(() => {
     socket.on("startGame",()=>{
-        setReady(true)
+        setGame({hidden : false,start : true})
     })
     socket.on("onUserIsReady",(username)=>{
-        toast.success(`${username} is ready !`)
+        toast.info(`${username} is ready !`)
+    })
+    socket.on("userFinished",(username)=>{
+        toast.info(`${username} finished playing`)
     })
    }, [socket]);
   return (
     <div className='w-full min-h-screen flex items-center justify-center flex-col mt-14'>
         {!ready && <button type="button" onClick={handleReady} className='bg-white rounded-lg text-gold px-8 py-2'>Am Ready</button>}
-        <div className={`${!ready && "opacity-20  -z-10"}`}>
-        <Game text={challenge.text_content} id={challenge.id} category={challenge.category} difficulty={challenge.difficulty} />
+        <div className={`${game.hidden && "opacity-20  -z-10"}`}>
+        <RoomGame autoStart={game.start} roomId={roomId} username={username} text={challenge.text_content} id={challenge.id} category={challenge.category} difficulty={challenge.difficulty} />
         </div>
     </div>
   )

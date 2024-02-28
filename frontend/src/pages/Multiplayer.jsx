@@ -37,7 +37,7 @@ function Multiplayer() {
        //console.log("GO TO GAME INFOS :",gameInfos)
         toast(`Joined room : ${gameInfos.roomId}`)
         //storing sockets
-        handleCreateRoom(gameInfos.senderSocket,gameInfos.recipientSocket)
+        //handleCreateRoom(gameInfos.senderSocket,gameInfos.recipientSocket)
         // go to game page
         navigate(`room/${gameInfos.roomId}/${gameInfos.challengeId}`)
      })
