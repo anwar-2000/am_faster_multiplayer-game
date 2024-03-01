@@ -1,3 +1,5 @@
+# Multiplayer Typing Game
+
 This is a multiplayer typing game where multiple players can compete against each other in typing challenges. The game is built using Node.js, React, Express, Socket.IO, and PostgreSQL. The backend application is dockerized using Docker Compose, and the integration of the React app into the Dockerized environment is planned for a future update.
 
 ## Features
@@ -24,32 +26,32 @@ To get started with the development or deployment of the multiplayer typing game
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/anwar-2000/am_faster_multiplayer-game.git
+   git clone [<repository_url>](https://github.com/anwar-2000/am_faster_multiplayer-game.git)
 Navigate to the project directory:
 
-   ```bash
+```bash
 Copy code
 cd multiplayer-typing-game
 Install dependencies for both backend and frontend:
 
-   ```bash
-         Copy code
-         cd backend
-         npm install
-         cd ../frontend
-         npm install
+bash
+Copy code
+cd backend
+npm install
+cd ../frontend
+npm install
 Set up the PostgreSQL database:
 
 Create a PostgreSQL database and configure the connection in the backend application.
 Start the backend server:
 
-   ```bash
+bash
 Copy code
 cd ../backend
 npm start
 Start the frontend development server:
 
-   ```bash
+bash
 Copy code
 cd ../frontend
 npm start
@@ -62,13 +64,12 @@ To deploy the multiplayer typing game using Docker Compose:
 
 Build the Docker images:
 
-   ```bash
+bash
 Copy code
-cd ./backend
 docker-compose build
 Start the Docker containers:
 
-   ```bash
+bash
 Copy code
 docker-compose up
 Access the application in your browser:
