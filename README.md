@@ -1,5 +1,3 @@
-# Multiplayer Typing Game
-
 This is a multiplayer typing game where multiple players can compete against each other in typing challenges. The game is built using Node.js, React, Express, Socket.IO, and PostgreSQL. The backend application is dockerized using Docker Compose, and the integration of the React app into the Dockerized environment is planned for a future update.
 
 ## Features
@@ -35,11 +33,11 @@ cd multiplayer-typing-game
 Install dependencies for both backend and frontend:
 
    ```bash
-Copy code
-cd backend
-npm install
-cd ../frontend
-npm install
+         Copy code
+         cd backend
+         npm install
+         cd ../frontend
+         npm install
 Set up the PostgreSQL database:
 
 Create a PostgreSQL database and configure the connection in the backend application.
