@@ -26,7 +26,7 @@ To get started with the development or deployment of the multiplayer typing game
 1. Clone the repository:
 
    ```bash
-   git clone <repository_url>
+   git clone https://github.com/anwar-2000/am_faster_multiplayer-game.git
 Navigate to the project directory:
 
 bash
