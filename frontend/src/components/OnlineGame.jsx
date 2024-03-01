@@ -12,13 +12,17 @@ function OnlineGame() {
     const [game, setGame] = useState({
         hidden : true ,
         start : false,
+        ready : false
     });
     const {challenge,roomId} = useLoaderData();
     const {username} = useContext(contextUI);
 
    // console.log(challenge)
    const handleReady = () =>{
-      socket.emit("userReady",({username,roomId}))
+      setGame((prev)=>({...prev,ready:true}))
+      setTimeout(() => {
+        socket.emit("userReady",({username,roomId}))
+      }, 1000);
    }
    useEffect(() => {
     socket.on("startGame",()=>{
@@ -33,7 +37,7 @@ function OnlineGame() {
    }, [socket]);
   return (
     <div className='w-full min-h-screen flex items-center justify-center flex-col mt-14'>
-        {!ready && <button type="button" onClick={handleReady} className='bg-white rounded-lg text-gold px-8 py-2'>Am Ready</button>}
+        {game.hidden && <button type="button" onClick={handleReady} className='bg-white rounded-lg text-gold px-8 py-2'disabled={game.ready}>{game.ready ? "Waiting for the other player..." : "Am Ready"}</button>}
         <div className={`${game.hidden && "opacity-20  -z-10"}`}>
         <RoomGame autoStart={game.start} roomId={roomId} username={username} text={challenge.text_content} id={challenge.id} category={challenge.category} difficulty={challenge.difficulty} />
         </div>

@@ -18,7 +18,8 @@ function ContextUIProvider({children}) {
         setStates(prevStates => ({ ...prevStates, loggedIn: false , username :""}));
       };
       const handleCreateRoom = (sender,recipient)=>{
-        setStates((prev)=>({...prev,sender : sender , recipient}))
+        //setting players id here to later handle save online game
+        setStates((prev)=>({...prev,sender,recipient}))
       }
     const contextValue = {
         loggedIn : states.loggedIn,

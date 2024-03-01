@@ -3,36 +3,40 @@ import { IoCloseOutline } from "react-icons/io5";
 import {toast} from "sonner"
 import { formatTime } from "../utils/elapsedTime";
 
-const Modal = forwardRef(({ message ,mistakes, challenge_id, time}, ref) => {
+const Modal = forwardRef(({ online , message ,mistakes, challenge_id, time}, ref) => {
   const [openModal, setOpenModal] = useState(false);
   const token = localStorage.getItem("userToken")
   const handleCloseModal = () => {
     setOpenModal(false)
   };
   const handleSaveScore = async () => {
-      try {
-        const response = await fetch("http://localhost:8000/games",{
-          method : "POST",
-          headers : {
-            "authorization" : `Bearer ${token}`,
-            "Content-type" : "application/json"
-          },
-          //more params to pass .... (game category)
-          body : JSON.stringify({
-            challenge_id : challenge_id,
-            mistakes : mistakes,
-            time : time
+    if (!online) {
+        try {
+          const response = await fetch("http://localhost:8000/games",{
+            method : "POST",
+            headers : {
+              "authorization" : `Bearer ${token}`,
+              "Content-type" : "application/json"
+            },
+            //more params to pass .... (game category)
+            body : JSON.stringify({
+              challenge_id : challenge_id,
+              mistakes : mistakes,
+              time : time
+            })
           })
-        })
-        if(!response.ok){
-            const errorData = await response.json()
-            toast.error(errorData.message)
-            return;
+          if(!response.ok){
+              const errorData = await response.json()
+              toast.error(errorData.message)
+              return;
+          }
+          toast.success("Saved !") 
+        } catch (error) {
+          console.log(error)
         }
-        toast.success("Saved !") 
-      } catch (error) {
-        console.log(error)
-      }
+    } else {
+      // saving online game data
+    }
 
   }
   useImperativeHandle(ref, () => ({
@@ -55,8 +59,11 @@ const Modal = forwardRef(({ message ,mistakes, challenge_id, time}, ref) => {
 
             <h1 className="text-xl mb-4 text-slate-400 self-center">{message}</h1>
             <div className="w-full flex flex-wrap gap-4 items-center justify-center">
-            <button className="self-center bg-gold text-white px-8 py-2 rounded-lg" onClick={handleCloseModal}>Try Again</button>
-           {token && <button className="self-center bg-blue-800 text-white px-8 py-2 rounded-lg" onClick={handleSaveScore}>Save Score</button>}            
+            {
+              // TODO : add a play again feature for online mode also !
+            }
+            {!online && <button className="self-center bg-gold text-white px-8 py-2 rounded-lg" onClick={handleCloseModal}>Try Again</button>}
+            {token && <button className="self-center bg-blue-800 text-white px-8 py-2 rounded-lg" onClick={handleSaveScore}>Save Score</button>}            
             </div>
           </div>
         </>

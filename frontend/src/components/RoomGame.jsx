@@ -92,13 +92,18 @@ function RoomGame({autoStart,roomId,username,id,text,category,difficulty}) {
       toast.message(`Congratulation ${winner} You WON !`, {
         description: `finished in ${formatTime(time)} with mistakes ${mistakes}`,
       })
-        toast.success(`Congratulation ${winner} You WON ! `);
+        //toast.success(`Congratulation ${winner} You WON ! `);
+    })
+    socket.on("Tie",({time,mistakes})=>{
+      toast.message(`IT'S A TIEE !`, {
+        description: `You finished in ${formatTime(time)} with ${mistakes} mistakes`,
+      })
     })
   }, [socket,autoStart]);
 
   return (
     <>
-      <Modal ref={modalRef} mistakes={gameStats.all_mistakes} message={gameStats.message} time={gameStats.elapsedTime} challenge_id={id} /> 
+      <Modal ref={modalRef} online={true} mistakes={gameStats.all_mistakes} message={gameStats.message} time={gameStats.elapsedTime} challenge_id={id} /> 
       <div className="w-full h-screen p-14 flex flex-col items-start justify-start">
         <div className="flex items-center justify-center gap-8">
           <h4 className="px-14 text-gold">{category} - {difficulty}</h4>

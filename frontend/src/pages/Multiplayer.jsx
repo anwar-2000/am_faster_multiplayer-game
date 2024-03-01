@@ -35,9 +35,9 @@ function Multiplayer() {
      })
      socket.on("goToGame", (gameInfos)=>{
        //console.log("GO TO GAME INFOS :",gameInfos)
-        toast(`Joined room : ${gameInfos.roomId}`)
-        //storing sockets
-        //handleCreateRoom(gameInfos.senderSocket,gameInfos.recipientSocket)
+        toast.message(`Joined room : ${gameInfos.roomId}`)
+        //storing usernames
+        handleCreateRoom(gameInfos.senderId,gameInfos.recipientId)
         // go to game page
         navigate(`room/${gameInfos.roomId}/${gameInfos.challengeId}`)
      })
@@ -46,8 +46,8 @@ function Multiplayer() {
      })
   }, [socket]);
   
-  return <div className="w-full flex items-start justify-start flex-wrap">
-    <h1 className='text-4xl text-white font-extrabold self-center w-full p-4'>Invite online people to a game !</h1>
+  return <div className="w-full flex items-start justify-start flex-wrap pt-14">
+    <h1 className='text-4xl text-white font-extrabold self-center w-full p-4'>Online Users !</h1>
     {isPending ? <div className="w-full bg-slate-400 animate-pulse"></div> : <div className="w-full p-8 flex items-start justify-start gap-4 flex-wrap">
         {online_users ? online_users.map((user,i)=>{
            return <OnlinePlayer challenges={data.challenges} player={user} key={i} />

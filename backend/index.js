@@ -1,11 +1,9 @@
 const express = require("express")
 const app = express()
 const http = require("http")
-
 const server = http.createServer(app)
 const socketIo = require("socket.io")
 require('dotenv').config();
-
 const cors = require("cors")
 const users = require("./routes/users")
 const games = require("./routes/games")
@@ -29,7 +27,8 @@ const io = socketIo(server,{
 const socketUsers = {}; // Map to store socket.id -> username associations
 const roomReadyStatus = {} // Map to store user ready states in a room
 const roomGameState = {}; // Map to store in progress game stats
-
+const MISTAKE_PENALTY = 1; // Each mistake adds 1 to the score
+const TIME_PENALTY = 0.1; // Each second adds 0.1 to the score
 
 io.on("connection", (socket) => {
   console.log("client connected /from server/: ", socket.id);
@@ -109,7 +108,6 @@ io.on("connection", (socket) => {
 socket.on("userReady", (gameInfo) => {
   const { username, roomId } = gameInfo;
   const readyUserSocket = socketUsers[username];
-
   if (readyUserSocket) { // Check if socket exists for the user
       console.log("THIS USER IS READY",username)
       io.to(roomId).emit("onUserIsReady", username); // Emit event 
@@ -124,17 +122,16 @@ socket.on("userReady", (gameInfo) => {
       if (allUsersReady) {
           // Emit event to start the game once both users are ready
           io.in(roomId).emit("startGame");
-          console.log("BORADCAST STARTING GAME IN THE ROOM")
+          console.log(`STARTING GAME IN THE ROOM ${roomId}`)
       }
   } else {
       console.log(`Socket not found for user: ${username}`);
+      io.to(socket.id).emit("user_not_found")
   }
 });
 socket.on("gameEnded", async ({challengeId,username, roomId, finishedIn, mistakes }) => {
-  //const usersInRoom = Object.keys(roomReadyStatus[roomId]);
-  //const opponent = usersInRoom.find(user => user !== username); // Find opponent username
-
   // Update game state to 'finished' for the user
+  console.log(`**************** challengeId is : ${challengeId}`)
   roomGameState[roomId] = roomGameState[roomId] || {};
   roomGameState[roomId][username] = {
       finishedIn,
@@ -145,16 +142,32 @@ socket.on("gameEnded", async ({challengeId,username, roomId, finishedIn, mistake
   if (roomGameState[roomId] && Object.keys(roomGameState[roomId]).length === 2) {
       // Both players have finished the game
       const [user1, user2] = Object.keys(roomGameState[roomId]);
-      const { mistakes: mistakes1 } = roomGameState[roomId][user1];
-      const { mistakes: mistakes2 } = roomGameState[roomId][user2];
-      console.log(`user ${user1} has ${mistakes1} mistakes`)
-      console.log(`user ${user2} has ${mistakes2} mistakes`)
-      // Determine the winner based on the lowest number of mistakes
+      const { mistakes: mistakes1, finishedIn: time1 } = roomGameState[roomId][user1];
+      const { mistakes: mistakes2, finishedIn: time2 } = roomGameState[roomId][user2];
+
+      console.log(`User ${user1} has ${mistakes1} mistakes and finished in ${time1}s`);
+      console.log(`User ${user2} has ${mistakes2} mistakes and finished in ${time2}s`);
+
+      // Calculate a score for each user based on a combination of mistakes and time --> the lower the score the better performence
+      const score1 = mistakes1 * MISTAKE_PENALTY + time1 * TIME_PENALTY;
+      const score2 = mistakes2 * MISTAKE_PENALTY + time2 * TIME_PENALTY;
+
+      // Determine the winner based on the lowest score
       let winner = null;
-      if (mistakes1 < mistakes2) {
+      // Announce the winner with how much time it took and how much mistakes
+      if (score1 < score2) {
           winner = user1;
-      } else if (mistakes2 < mistakes1) {
+          console.log(`Winner is ${winner} with a score of ${score1} in ${time1}s`);
+          io.in(roomId).emit("winnerAnnouncement", { winner, mistakes: mistakes1, time: time1 });
+      } else if (score2 < score1) {
           winner = user2;
+          console.log(`Winner is ${winner} with a score of ${score2} in ${time2}s`);
+          io.in(roomId).emit("winnerAnnouncement", { winner, mistakes: mistakes2, time: time2 });
+      } else {
+          // If scores are equal, consider it as a tie
+          winner = null;
+          console.log("It's a tie!");
+          io.in(roomId).emit("Tie", {mistakes: mistakes1, time: time1 });
       }
       //db save game********************
       // try {
@@ -163,10 +176,6 @@ socket.on("gameEnded", async ({challengeId,username, roomId, finishedIn, mistake
       // } catch (error) {
       //   console.log("ERROR SAVING TO DB",error)
       // }
-      
-      // Announce the winner with how much time it took and how much mistakes
-      io.in(roomId).emit("winnerAnnouncement", {winner,mistakes : roomGameState[roomId][winner].mistakes,time : roomGameState[roomId][winner].finshedIn});
-
       // Clear room and ready states
       delete roomReadyStatus[roomId];
       delete roomGameState[roomId];
