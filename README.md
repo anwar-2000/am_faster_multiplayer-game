@@ -26,7 +26,7 @@ To get started with the development or deployment of the multiplayer typing game
 1. Clone the repository:
 
    ```bash
-   git clone <repository_url>
+   git clone [<repository_url>](https://github.com/anwar-2000/am_faster_multiplayer-game.git)
 Navigate to the project directory:
 
 bash
@@ -79,6 +79,7 @@ Open http://localhost:3000 to view the React app.
 Screenshots
 
 ![Screenshot 1](frontend/project/landing_page.png)
+![Screenshot 1](frontend/project/profile.png)
 ![Screenshot 1](frontend/project/invite.png)
 ![Screenshot 1](frontend/project/reject.png)
 ![Screenshot 1](frontend/project/room.png)
