@@ -63,7 +63,7 @@ const Modal = forwardRef(({ online , message ,mistakes, challenge_id, time}, ref
               // TODO : add a play again feature for online mode also !
             }
             {!online && <button className="self-center bg-gold text-white px-8 py-2 rounded-lg" onClick={handleCloseModal}>Try Again</button>}
-            {token && <button className="self-center bg-blue-800 text-white px-8 py-2 rounded-lg" onClick={handleSaveScore}>Save Score</button>}            
+            {!online && token && <button className="self-center bg-blue-800 text-white px-8 py-2 rounded-lg" onClick={handleSaveScore}>Save Score</button>}            
             </div>
           </div>
         </>

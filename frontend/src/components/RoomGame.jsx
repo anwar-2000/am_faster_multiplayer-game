@@ -94,9 +94,15 @@ function RoomGame({autoStart,roomId,username,id,text,category,difficulty}) {
       })
         //toast.success(`Congratulation ${winner} You WON ! `);
     })
-    socket.on("Tie",({time,mistakes})=>{
+    socket.on("Lost",({winner,time,mistakes})=>{
+      toast.message("YOU LOST :/ , TRAIN HARDER IN SOLO  ",{
+        description : `${winner} : finished in ${formatTime(time)} and ${mistakes} mistakes`
+      })
+    })
+    socket.on("Tie",({score})=>{
       toast.message(`IT'S A TIEE !`, {
-        description: `You finished in ${formatTime(time)} with ${mistakes} mistakes`,
+        // TODO :  next i'll send the score not stats
+        description: `Both of You had the same score !`,
       })
     })
   }, [socket,autoStart]);

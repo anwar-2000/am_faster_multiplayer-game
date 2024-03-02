@@ -108,25 +108,34 @@ io.on("connection", (socket) => {
 socket.on("userReady", (gameInfo) => {
   const { username, roomId } = gameInfo;
   const readyUserSocket = socketUsers[username];
-  if (readyUserSocket) { // Check if socket exists for the user
-      console.log("THIS USER IS READY",username)
-      io.to(roomId).emit("onUserIsReady", username); // Emit event 
-      roomReadyStatus[roomId] = roomReadyStatus[roomId] || {}; // Initialize room readiness status if not already initialized
-      roomReadyStatus[roomId][username] = true; // Mark user as ready in the room
-      console.log(`ROOM ${roomId} Ready Users are `,roomReadyStatus[roomId])
-      // Check if both users in the room are ready
-      const usersInRoom = Object.keys(roomReadyStatus[roomId]);
-      const allUsersReady = usersInRoom.every(user => roomReadyStatus[roomId][user]);
-      console.log("ALL USERS ARE READY",allUsersReady)
-      //console.log("THIS USER IS READY",username)
-      if (allUsersReady) {
-          // Emit event to start the game once both users are ready
-          io.in(roomId).emit("startGame");
-          console.log(`STARTING GAME IN THE ROOM ${roomId}`)
-      }
+
+  if (readyUserSocket) {
+    console.log("THIS USER IS READY", username);
+    io.to(roomId).emit("onUserIsReady", username);
+
+    // Initializing room readiness status if not already initialized
+    roomReadyStatus[roomId] = roomReadyStatus[roomId] || {};
+
+    // Marking user as ready in the room
+    roomReadyStatus[roomId][username] = true;
+
+    // Checking if all users in the room are ready
+    const usersInRoom = Object.keys(roomReadyStatus[roomId]);
+    const allUsersReady = usersInRoom.every(user => roomReadyStatus[roomId][user]);
+
+    console.log("ALL USERS ARE READY", allUsersReady);
+
+    if (allUsersReady) {
+      // Emitting event to start the game once all users are ready
+      io.in(roomId).emit("startGame");
+      console.log(`STARTING GAME IN THE ROOM ${roomId}`);
+      
+      // Resetting room readiness status for the next game
+      roomReadyStatus[roomId] = {};
+    }
   } else {
-      console.log(`Socket not found for user: ${username}`);
-      io.to(socket.id).emit("user_not_found")
+    console.log(`Socket not found for user: ${username}`);
+    io.to(socket.id).emit("user_not_found");
   }
 });
 socket.on("gameEnded", async ({challengeId,username, roomId, finishedIn, mistakes }) => {
@@ -158,16 +167,18 @@ socket.on("gameEnded", async ({challengeId,username, roomId, finishedIn, mistake
       if (score1 < score2) {
           winner = user1;
           console.log(`Winner is ${winner} with a score of ${score1} in ${time1}s`);
-          io.in(roomId).emit("winnerAnnouncement", { winner, mistakes: mistakes1, time: time1 });
+          io.to(socketUsers[winner]).emit("winnerAnnouncement", { winner, mistakes: mistakes1, time: time1 });
+          io.to(socketUsers[user2]).emit("Lost", { winner, mistakes: mistakes1, time: time1 });
       } else if (score2 < score1) {
           winner = user2;
           console.log(`Winner is ${winner} with a score of ${score2} in ${time2}s`);
-          io.in(roomId).emit("winnerAnnouncement", { winner, mistakes: mistakes2, time: time2 });
+          io.in(socketUsers[winner]).emit("winnerAnnouncement", { winner, mistakes: mistakes2, time: time2 });
+          io.to(socketUsers[user1]).emit("Lost", { winner, mistakes: mistakes2, time: time2 });
       } else {
           // If scores are equal, consider it as a tie
           winner = null;
           console.log("It's a tie!");
-          io.in(roomId).emit("Tie", {mistakes: mistakes1, time: time1 });
+          io.in(roomId).emit("Tie", {score1});
       }
       //db save game********************
       // try {

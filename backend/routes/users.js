@@ -15,7 +15,7 @@ router.get("/online", async (req, res) => {
         const onlineUsersResult = await pool.query(onlineUsersQuery);
         //console.log(online_users)
         if(onlineUsersResult.rows.length < 1){
-            return res.status(400).send({message : "No online Users at the moment ! "})
+            return res.status(200).send({online_users : [] , message : "No online Users at the moment ! "})
         }
         const onlineUsers = onlineUsersResult.rows;
         return  res.status(200).send({

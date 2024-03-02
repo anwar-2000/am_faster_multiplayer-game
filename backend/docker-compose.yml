@@ -2,6 +2,7 @@ version: "3"
 services:
   postgres:
     image: postgres
+## using env here is a must ! but since i won't deploy this project ...
     environment:
        POSTGRES_PASSWORD: drwx_anwar
        POSTGRES_USER: drwx_anwar
@@ -14,6 +15,7 @@ services:
     ports:
       - 8000:8000
     restart: always 
+## TODO : frontend container here
     
 volumes:
   postgres_data:

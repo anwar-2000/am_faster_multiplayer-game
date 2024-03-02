@@ -36,10 +36,10 @@ function Multiplayer() {
      socket.on("goToGame", (gameInfos)=>{
        //console.log("GO TO GAME INFOS :",gameInfos)
         toast.message(`Joined room : ${gameInfos.roomId}`)
-        //storing usernames
+        //TODO : storing usernames instead of id... for game save later
         handleCreateRoom(gameInfos.senderId,gameInfos.recipientId)
         // go to game page
-        navigate(`room/${gameInfos.roomId}/${gameInfos.challengeId}`)
+        navigate(`/multiplayer/room/${gameInfos.roomId}/${gameInfos.challengeId}`)
      })
      socket.on("user_not_found",()=>{
       toast.info("The user you invited is having network Errors")
@@ -47,11 +47,25 @@ function Multiplayer() {
   }, [socket]);
   
   return <div className="w-full flex items-start justify-start flex-wrap pt-14">
-    <h1 className='text-4xl text-white font-extrabold self-center w-full p-4'>Online Users !</h1>
-    {isPending ? <div className="w-full bg-slate-400 animate-pulse"></div> : <div className="w-full p-8 flex items-start justify-start gap-4 flex-wrap">
-        {online_users ? online_users.map((user,i)=>{
+    <h1 className='text-2xl text-center text-white font-extrabold self-center w-full p-4'>Let&apos; see how you handle real people !</h1>
+    {isPending ? 
+    <div className="w-full bg-slate-400 animate-pulse"></div> 
+        :
+     <div className="w-full p-8 flex items-start justify-start gap-4 flex-wrap">
+        {online_users && online_users.length >= 1
+         ? <table className='w-full'>
+            <thead className='text-blue-400 '>
+              <th>Username</th>
+              <th>Challenge</th>
+              <th>Invite</th>
+            </thead>
+            <tbody>
+            {online_users.map((user,i)=>{
            return <OnlinePlayer challenges={data.challenges} player={user} key={i} />
-        }) : <h1>No user is online</h1>}
+               })}
+            </tbody>
+         </table>
+         : <h1>No user is online</h1>}
     </div>}
   </div>
 }
@@ -72,7 +86,7 @@ export const multiplayerLoader = async () => {
     }
     const data = await response.json()
     //console.log("loader data",data)
-    return data;
+    return data || [];
   } catch (error) {
     console.log(error)
   }

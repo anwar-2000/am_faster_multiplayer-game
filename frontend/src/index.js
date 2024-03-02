@@ -13,7 +13,7 @@ root.render(
     <SocketContextProvider>
     <App />
     </SocketContextProvider>
-    <Toaster position="top-center" expand={false} closeButton duration={5000} richColors />
+    <Toaster position="top-left" expand={false} closeButton duration={5000} richColors />
   </QueryClientProvider>
 );
 
