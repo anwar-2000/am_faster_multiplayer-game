@@ -83,7 +83,8 @@ Screenshots
 ![Screenshot 1](frontend/project/reject.png)
 ![Screenshot 1](frontend/project/room.png)
 ![Screenshot 1](frontend/project/game.png)
-![Screenshot 1](frontend/project/finished.png)
-
+![Screenshot 1](frontend/project/oneFinished.png)
+![Screenshot 1](frontend/project/Won.png)
+![Screenshot 1](frontend/project/lost.png)
 Contributing
 Contributions are welcome! Feel free to open a pull request or submit an issue for any feature requests, bug fixes, or suggestions.
